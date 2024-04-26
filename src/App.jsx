@@ -170,7 +170,7 @@ function App() {
           }}
         >
           <div
-            className="relative w-full h-[80vh] bg-cover bg-center" style={{ backgroundImage: "url('src/assets/images/image1.jpeg')" }}
+            className="relative w-full h-[80vh] bg-cover bg-center" style={{ backgroundImage: "url('../assets/images/image1.jpeg')" }}
           >
             <div className='card bg-white w-10/12 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-10
              rounded-xl shadow-lg
