@@ -7,6 +7,10 @@ import './App.css'
 import { InputNumber } from 'antd';
 import Service from './service/service';
 import { useEffect } from 'react';
+import imageBackground from '../assets/images/image1.jpeg'
+import createOrder from '../assets/svg/create_order.svg'
+import pay from '../assets/svg/pay.svg'
+import ship from '../assets/svg/ship.svg'
 
 function App() {
 
@@ -170,7 +174,7 @@ function App() {
           }}
         >
           <div
-            className="relative w-full h-[80vh] bg-cover bg-center" style={{ backgroundImage: "url('../assets/images/image1.jpeg')" }}
+            className="relative w-full h-[80vh] bg-cover bg-center" style={{ backgroundImage: `url(${imageBackground})` }}
           >
             <div className='card bg-white w-10/12 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-10
              rounded-xl shadow-lg
@@ -540,7 +544,7 @@ function App() {
                 <div className='pb-4'>
                   <div className='flex justify-center items-center'>
                     <div className='flex flex-col items-center'>
-                      <img src='src/assets/svg/create_order.svg' className='w-32 h-32' />
+                      <img src={createOrder} className='w-32 h-32' />
                       <h1 className='text-xl text-black font-medium'>ค้นหาขนส่ง</h1>
                     </div>
                     <div className='flex flex-col items-center'>
@@ -549,7 +553,7 @@ function App() {
                       </svg>
                     </div>
                     <div className='flex flex-col items-center'>
-                      <img src='src/assets/svg/pay.svg' className='w-32 h-32' />
+                      <img src={pay} className='w-32 h-32' />
                       <h1 className='text-xl text-black font-medium'>เปรียบเทียบราคา</h1>
                     </div>
                     <div className='flex flex-col items-center'>
@@ -558,7 +562,7 @@ function App() {
                       </svg>
                     </div>
                     <div className='flex flex-col items-center'>
-                      <img src='src/assets/svg/ship.svg' className='w-32 h-32' />
+                      <img src={ship} className='w-32 h-32' />
                       <h1 className='text-xl text-black font-medium'>ส่งพัสดุ</h1>
                     </div>
                   </div>
