@@ -7,10 +7,10 @@ import './App.css'
 import { InputNumber } from 'antd';
 import Service from './service/service';
 import { useEffect } from 'react';
-import imageBackground from '../assets/images/image1.jpeg'
-import createOrder from '../assets/svg/create_order.svg'
-import pay from '../assets/svg/pay.svg'
-import ship from '../assets/svg/ship.svg'
+import imageBackground from './assets/images/image1.jpeg'
+import createOrder from './assets/svg/create_order.svg'
+import pay from './assets/svg/pay.svg'
+import ship from './assets/svg/ship.svg'
 
 function App() {
 
