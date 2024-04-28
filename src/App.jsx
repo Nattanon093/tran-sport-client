@@ -198,7 +198,7 @@ function App() {
                       showSearch
                       placeholder="ค้นหาที่อยู่ต้นทาง"
                     >
-                      {data.map((province) => (
+                      {data?.map((province) => (
                         <Select.Option key={province.id} value={province.name}>
                           {province.name}
                         </Select.Option>
@@ -217,7 +217,7 @@ function App() {
                       showSearch
                       placeholder="ค้นหาที่อยู่ปลายทาง"
                     >
-                      {data.map((province) => (
+                      {data?.map((province) => (
                         <Select.Option key={province.id} value={province.name}>
                           {province.name}
                         </Select.Option>
@@ -517,7 +517,11 @@ function App() {
                                     }</h5>
                                   </div>
                                   <div className='col-span-1 flex flex-col justify-center items-center'>
-                                    <Button type="primary" className="font-kanit bg-primary hover:bg-secondary text-white font-normal focus:outline-none focus:shadow-outline" >
+                                    <Button type="primary" className="font-kanit bg-primary hover:bg-secondary text-white font-normal focus:outline-none focus:shadow-outline" 
+                                      onClick={() => {
+                                        window.open('https://www.bsgroupth.com/', '_blank');
+                                      }}
+                                    >
                                       ใช้บริการ
                                     </Button>
                                   </div>
@@ -539,7 +543,7 @@ function App() {
             ) : (
               <div className='flex flex-col' >
                 <div className='flex justify-center items-center pt-4 pb-4'>
-                  <h1 className='text-4xl text-black font-medium'>ส่งพัสดุกับ ES EXPRESS ง่ายมากเพียง 3 ขั้นตอน</h1>
+                  <h1 className='text-4xl text-black font-medium'>ส่งพัสดุกับ BS EXPRESS ง่ายมากเพียง 3 ขั้นตอน</h1>
                 </div>
                 <div className='pb-4'>
                   <div className='flex justify-center items-center'>
