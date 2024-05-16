@@ -34,7 +34,15 @@ const fitlerDataDelivery = async (data) => {
     } catch (error) {
         console.error(error);
     }
-
 }
 
-export default { getPosts, getProvinceAndDistrictAndSubDistrict, getDeliveryService, fitlerDataDelivery };
+const getParcelBoxSize = async () => {
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_API_URL}/api/v1/getParcelBoxSize`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export default { getPosts, getProvinceAndDistrictAndSubDistrict, getDeliveryService, fitlerDataDelivery, getParcelBoxSize };

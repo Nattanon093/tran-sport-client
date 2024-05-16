@@ -11,16 +11,14 @@ import imageBackground from './assets/images/image1.jpeg'
 import createOrder from './assets/svg/create_order.svg'
 import pay from './assets/svg/pay.svg'
 import ship from './assets/svg/ship.svg'
-import { Checkbox } from 'antd';
 
-function App() {
+function HomePage() {
 
   const [isOpen, setIsOpen] = useState(false)
   const [data, setData] = useState([]);
   const [dataDelivery, setDataDelivery] = useState([]);
   const [originalData, setOriginalData] = useState([]);
-  const [parcelBoxSize, setParcelBoxSize] = useState([]);
-  const [isOpenSystem, setIsOpenSystem] = useState(true);
+  const [isOpenSystem, setIsOpenSystem] = useState(false);
   const [isServiceFee50, setIsServiceFee50] = useState(false);
   const [isServiceFee100, setIsServiceFee100] = useState(false);
   const [isServiceFee150, setIsServiceFee150] = useState(false);
@@ -33,7 +31,6 @@ function App() {
   const [isDeliveryTime4, setIsDeliveryTime4] = useState(false);
   const [isDeliveryTime5, setIsDeliveryTime5] = useState(false);
   const [isDeliveryTime6, setIsDeliveryTime6] = useState(false);
-  const [isParcelBoxSize, setIsParcelBoxSize] = useState(true);
 
   const getProvinceAndDistrictAndSubDistrict = async () => {
     try {
@@ -44,17 +41,7 @@ function App() {
     }
   };
 
-  const getParcelBoxSize = async () => {
-    try {
-      const response = await Service.getParcelBoxSize();
-      return response;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   const onSubmit = async (values) => {
-    console.log('values.boxSizeId', values.boxSizeId);
     try {
       const from = {
         district: "",
@@ -72,8 +59,7 @@ function App() {
         weight: "",
         width: "",
         length: "",
-        height: "",
-        id: ""
+        height: ""
       };
       let data = [];
       const address_origin = values.address_origin.split(" ");
@@ -90,7 +76,6 @@ function App() {
       parcel.width = values.width;
       parcel.length = values.long;
       parcel.height = values.height;
-      parcel.id = values.boxSizeId
       data.push({
         from: from,
         to: to,
@@ -165,9 +150,6 @@ function App() {
   useEffect(() => {
     getProvinceAndDistrictAndSubDistrict().then((response) => {
       setData(response);
-    });
-    getParcelBoxSize().then((response) => {
-      setParcelBoxSize(response);
     });
   }, []);
 
@@ -247,89 +229,34 @@ function App() {
                         </Select>
                       </Form.Item>
                     </div>
-                    {
-                      isParcelBoxSize && (
-                        <div className="flex flex-col mb-0 p-4 xs:p-0 col-span-2 md:col-span-2">
-                          <Form.Item
-                            name="boxSizeId"
-                            className='w-full'
-                            rules={[{ required: true, message: 'กรุณากรอกความกว้าง' }]}
-                          >
-                            <Select className="w-full p-2 xs:p-0 rounded-md font-kanit"
-                              name="boxSizeId"
-                              showSearch
-                              placeholder="เลือกขนาดกล่องพัสดุ"
-                              filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                              {
-                                parcelBoxSize?.map((boxSize) => (
-                                  <Select.Option key={boxSize.id} value={boxSize.id}>
-                                    {boxSize.size_name}
-                                  </Select.Option>
-                                ))}
-                            </Select>
-                          </Form.Item>
-                          {/* <Form.Item
-                            name="isParcelBoxSize"
-                            className='w-full'
-                          >
-                            <Checkbox className="text-black font-kanit"
-                              onChange={(e) => {
-                                setIsParcelBoxSize(e.target.checked)
-                              }}
-                            >
-                              ต้องการเลือกขนาดกล่องพัสดุ
-                            </Checkbox>
-                          </Form.Item> */}
-                        </div>
-                      )
-                    }
-                    {/* {
-                      !isParcelBoxSize && (
-                        <>
-                          <div className="flex flex-col mb-0 p-4 xs:p-0 col-span-2 md:col-span-1">
-                            <Form.Item
-                              name="width"
-                              className='w-full'
-                              rules={[{ required: true, message: 'กรุณากรอกความกว้าง' }]}
-                            >
-                              <InputNumber type="text" className="w-full p-1 sm:p-0 border border-gray-300 rounded-md font-kanit" placeholder="กว้าง" />
-                            </Form.Item>
-                            <Form.Item
-                              name="isParcelBoxSize"
-                              className='w-full'
-                            >
-                              <Checkbox className="text-black font-kanit"
-                                onChange={(e) => {
-                                  setIsParcelBoxSize(e.target.checked)
-                                }}
-                              >
-                                ต้องการเลือกขนาดกล่องพัสดุ
-                              </Checkbox>
-                            </Form.Item>
-                          </div>
-                          <div className="flex p-4 xs:p-0 col-span-2 md:col-span-1">
-                            <Form.Item
-                              name="long"
-                              className='w-full'
-                              rules={[{ required: true, message: 'กรุณากรอกยาว' }]}
-                            >
-                              <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="ยาว" />
-                            </Form.Item>
-                          </div>
-                          <div className="flex p-4 xs:p-0 col-span-2 md:col-span-1">
-                            <Form.Item
-                              name="height"
-                              className='w-full'
-                              rules={[{ required: true, message: 'กรุณากรอกสูง' }]}
-                            >
-                              <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="สูง" />
-                            </Form.Item>
-                          </div>
-                        </>
-                      )
-                    } */}
-                    <div className={isParcelBoxSize ? "flex p-4 xs:p-0 col-span-2 md:col-span-2" : "flex p-4 xs:p-0 col-span-2 md:col-span-1"}>
+                    <div className="flex p-4 xs:p-0 col-span-2 md:col-span-1">
+                      <Form.Item
+                        name="width"
+                        className='w-full'
+                        rules={[{ required: true, message: 'กรุณากรอกความกว้าง' }]}
+                      >
+                        <InputNumber type="text" className="w-full p-1 sm:p-0 border border-gray-300 rounded-md font-kanit" placeholder="กว้าง" />
+                      </Form.Item>
+                    </div>
+                    <div className="flex p-4 xs:p-0 col-span-2 md:col-span-1">
+                      <Form.Item
+                        name="long"
+                        className='w-full'
+                        rules={[{ required: true, message: 'กรุณากรอกยาว' }]}
+                      >
+                        <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="ยาว" />
+                      </Form.Item>
+                    </div>
+                    <div className="flex p-4 xs:p-0 col-span-2 md:col-span-1">
+                      <Form.Item
+                        name="height"
+                        className='w-full'
+                        rules={[{ required: true, message: 'กรุณากรอกสูง' }]}
+                      >
+                        <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="สูง" />
+                      </Form.Item>
+                    </div>
+                    <div className="flex p-4 xs:p-0 col-span-2 md:col-span-1">
                       <Form.Item
                         name="weight"
                         className='w-full'
@@ -659,13 +586,13 @@ function App() {
             <div className="hero-content text-center text-neutral-content">
               <div className="max-w-md">
                 <h1 className="mb-5 text-5xl font-bold">
-                  ระบบกำลังปิดปรับปรุง
+                    ระบบกำลังปิดปรับปรุง
                 </h1>
                 <p className="mb-5">
-                  ขออภัยในความไม่สะดวก ระบบกำลังปิดปรับปรุง กรุณาลองใหม่ในภายหลัง
+                    ขออภัยในความไม่สะดวก ระบบกำลังปิดปรับปรุง กรุณาลองใหม่ในภายหลัง
                 </p>
                 <button className="btn btn-primary">
-                  ลองใหม่ในภายหลัง
+                    ลองใหม่ในภายหลัง
                 </button>
               </div>
             </div>
@@ -675,4 +602,4 @@ function App() {
     </>
   );
 }
-export default App
+export default HomePage
