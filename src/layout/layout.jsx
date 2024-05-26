@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import logo from '../assets/images/logo150x150.png'
 
 const navigation = [
-    // { name: 'เข้าสู่เว็บไซต์', href: '#', current: false },
-    // { name: 'เช็คพัสดุ', href: '#', current: true },
+    { name: 'เข้าสู่เว็บไซต์', href: '#', current: false },
+    { name: 'เช็คสถานะพัสดุ', href: '/check-package', current: false },
 ]
 
 
@@ -24,13 +24,15 @@ export default function Layout({ children }) {
                             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                                 <div className="flex h-16 items-center justify-between">
                                     <div className="flex items-center">
-                                        <div className="flex-shrink-0">
-                                            <img
-                                                className=" max-h-16  max-w-16 "
-                                                src={logo}
-                                                alt="Your Company"
-                                            />
-                                        </div>
+                                        <a href="/">
+                                            <div className="flex-shrink-0">
+                                                <img
+                                                    className=" max-h-16  max-w-16 "
+                                                    src={logo}
+                                                    alt="Your Company"
+                                                />
+                                            </div>
+                                        </a>
                                         <div className="hidden md:block">
                                             <div className="ml-10 flex items-baseline space-x-4">
                                                 {navigation.map((item) => (
