@@ -35,10 +35,14 @@ function CheckPackagePage() {
         setIsModalOpen(false);
     };
 
+    const toHome = () => {
+        window.location.href = '/';
+    }
+
 
     return (
         <>
-            {
+            {/* {
                 isOpenSystem ? (
                     <Form
                         name="basic"
@@ -270,7 +274,7 @@ function CheckPackagePage() {
                             </div>
                         </Modal>
                     </Form>
-                ) : (
+                ) : ( */}
                     <div className="hero min-h-screen font-kanit" style={{ backgroundImage: 'url(https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg)' }}>
                         <div className="hero-overlay bg-opacity-60"></div>
                         <div className="hero-content text-center text-neutral-content">
@@ -281,14 +285,16 @@ function CheckPackagePage() {
                                 <p className="mb-5">
                                     ขออภัยในความไม่สะดวก ระบบกำลังปิดปรับปรุง กรุณาลองใหม่ในภายหลัง
                                 </p>
-                                <button className="btn btn-primary">
+                                <button className="btn btn-primary"
+                                    onClick={() => toHome()}
+                                >
                                     ลองใหม่ในภายหลัง
                                 </button>
                             </div>
                         </div>
                     </div>
-                )
-            }
+                {/* )
+            } */}
         </>
     );
 }
