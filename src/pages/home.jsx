@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Disclosure } from '@headlessui/react'
 import { PlusIcon, MinusIcon } from '@heroicons/react/20/solid'
-import { Button, Select, Form } from 'antd';
+import { Button, Select, Form, Checkbox } from 'antd';
 import Layout from '../layout/layout'
 import { InputNumber } from 'antd';
 import Service from '../service/service';
@@ -33,7 +33,7 @@ function HomrPage() {
   const [isDeliveryTime4, setIsDeliveryTime4] = useState(false);
   const [isDeliveryTime5, setIsDeliveryTime5] = useState(false);
   const [isDeliveryTime6, setIsDeliveryTime6] = useState(false);
-  const [isParcelBoxSize, setIsParcelBoxSize] = useState(true);
+  const [isParcelBoxSize, setIsParcelBoxSize] = useState(false);
   const location = useLocation();
 
 
@@ -118,35 +118,19 @@ function HomrPage() {
     if (isServiceFee50 || isServiceFee100 || isServiceFee150 || isServiceFeeMore150 || isPickupPointIn || isPickupPointOut || isDeliveryTime1 || isDeliveryTime2 || isDeliveryTime3 || isDeliveryTime4 || isDeliveryTime5 || isDeliveryTime6) {
       filteredData = dataDelivery.filter(item => {
         let valid = true;
-        if (isServiceFee50) valid = valid && item.price < 50;
-        if (isServiceFee100) valid = valid && item.price >= 50 && item.price <= 100;
-        if (isServiceFee150) valid = valid && item.price > 100 && item.price <= 150;
-        if (isServiceFeeMore150) valid = valid && item.price > 150;
-        if (isPickupPointIn) valid = valid && item.parcel_pickup_point === 'เข้ารับหน้าบ้าน';
+        if (isServiceFee50) valid = valid && item.rate < 50;
+        if (isServiceFee100) valid = valid && item.rate >= 50 && item.rate <= 100;
+        if (isServiceFee150) valid = valid && item.rate > 100 && item.rate <= 150;
+        if (isServiceFeeMore150) valid = valid && item.rate > 150;
+        if (isPickupPointIn) valid = valid && item.parcel_pickup_point === 'เข้ารับที่หน้าบ้าน';
         if (isPickupPointOut) valid = valid && item.parcel_pickup_point === 'ส่งด้วยตนเอง';
         if (isDeliveryTime1) {
           const deliveryTime = parseInt(item.delivery_time.split('-')[0], 10);
-          valid = valid && deliveryTime <= 1;
+          valid = valid && deliveryTime <= 1 && deliveryTime <= 4;
         }
         if (isDeliveryTime2) {
           const deliveryTime = parseInt(item.delivery_time.split('-')[0], 10);
-          valid = valid && deliveryTime > 1 && deliveryTime <= 3;
-        }
-        if (isDeliveryTime3) {
-          const deliveryTime = parseInt(item.delivery_time.split('-')[0], 10);
-          valid = valid && deliveryTime > 3 && deliveryTime <= 5;
-        }
-        if (isDeliveryTime4) {
-          const deliveryTime = parseInt(item.delivery_time.split('-')[0], 10);
-          valid = valid && deliveryTime > 5 && deliveryTime <= 7;
-        }
-        if (isDeliveryTime5) {
-          const deliveryTime = parseInt(item.delivery_time.split('-')[0], 10);
-          valid = valid && deliveryTime > 7 && deliveryTime <= 14;
-        }
-        if (isDeliveryTime6) {
-          const deliveryTime = parseInt(item.delivery_time.split('-')[0], 10);
-          valid = valid && deliveryTime > 14;
+          valid = valid && deliveryTime <= 2 && deliveryTime <= 5;
         }
         return valid;
       });
@@ -197,11 +181,10 @@ function HomrPage() {
             }}
           >
             <div
-              className="relative w-full h-[80vh] bg-cover bg-center" style={{ backgroundImage: `url(${imageBackground})` }}
+              className="relative w-full h-[70vh] bg-cover bg-center" style={{ backgroundImage: `url(${imageBackground})` }}
             >
-              <div className='card bg-white w-10/12 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-10
-               rounded-xl shadow-lg
-               xs:w-11/12 xs:p-4 xs:top-1/2 xs:left-1/2 xs:transform xs--translate-x-1/2 xs--translate-y-1/2
+              <div className='card bg-white w-[55%] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-10
+               rounded-xl shadow-lg xs:p-4 xs:top-1/2 xs:left-1/2 xs:transform xs--translate-x-1/2 xs--translate-y-1/2
               '>
                 <div className='flex items-center'>
                   <h3 className='text-2xl text-black font-light mb-4 mr-2'>ค้นหาและเปรียบเทียบขนส่งที่ดีที่สุด </h3>
@@ -270,7 +253,7 @@ function HomrPage() {
                               ))}
                           </Select>
                         </Form.Item>
-                        {/* <Form.Item
+                        <Form.Item
                             name="isParcelBoxSize"
                             className='w-full'
                           >
@@ -278,14 +261,15 @@ function HomrPage() {
                               onChange={(e) => {
                                 setIsParcelBoxSize(e.target.checked)
                               }}
+                              checked
                             >
                               ต้องการเลือกขนาดกล่องพัสดุ
                             </Checkbox>
-                          </Form.Item> */}
+                          </Form.Item>
                       </div>
                     )
                   }
-                  {/* {
+                  {
                       !isParcelBoxSize && (
                         <>
                           <div className="flex flex-col mb-0 p-4 xs:p-0 col-span-2 md:col-span-1">
@@ -304,6 +288,7 @@ function HomrPage() {
                                 onChange={(e) => {
                                   setIsParcelBoxSize(e.target.checked)
                                 }}
+                                checked={isParcelBoxSize}
                               >
                                 ต้องการเลือกขนาดกล่องพัสดุ
                               </Checkbox>
@@ -329,19 +314,19 @@ function HomrPage() {
                           </div>
                         </>
                       )
-                    } */}
+                    }
                   <div className={isParcelBoxSize ? "flex p-4 xs:p-0 col-span-2 md:col-span-2" : "flex p-4 xs:p-0 col-span-2 md:col-span-1"}>
                     <Form.Item
                       name="weight"
                       className='w-full'
                       rules={[{ required: true, message: 'กรุณากรอกน้ำหนัก' }]}
                     >
-                      <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="น้ำหนัก(กรัม)" />
+                      <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="น้ำหนัก(กิโลกรัม)" />
                     </Form.Item>
                   </div>
                 </div>
                 <div className="flex justify-center mt-4 xs:mt-1">
-                  <Button type="primary" htmlType="submit" className="font-kanit bg-primary hover:bg-secondary text-white font-normal focus:outline-none focus:shadow-outline"
+                  <Button type="primary" htmlType="submit" className="font-kanit bg-primary hover:!bg-[#e95e5f] text-white font-normal focus:outline-none focus:shadow-outline"
                   >
                     ตรวจสอบราคา
                   </Button>
@@ -443,7 +428,7 @@ function HomrPage() {
 
                                           }}
                                         />
-                                        <span className="label-text text-lg">เข้ารับหน้าบ้าน</span>
+                                        <span className="label-text text-lg">เข้ารับที่หน้าบ้าน</span>
                                       </label>
                                       <label className="cursor-pointer flex items-center pb-2">
                                         <input type="checkbox"
@@ -485,7 +470,7 @@ function HomrPage() {
 
                                           }}
                                         />
-                                        <span className="label-text text-lg">1 วัน</span>
+                                        <span className="label-text text-lg">1 - 4 วัน</span>
                                       </label>
                                       <label className="cursor-pointer flex items-center pb-2">
                                         <input type="checkbox"
@@ -496,51 +481,7 @@ function HomrPage() {
 
                                           }}
                                         />
-                                        <span className="label-text text-lg">2 - 3 วัน</span>
-                                      </label>
-                                      <label className="cursor-pointer flex items-center pb-2">
-                                        <input type="checkbox"
-                                          className="checkbox checkbox-sm mr-4"
-                                          value={isDeliveryTime3}
-                                          onChange={(e) => {
-                                            setIsDeliveryTime3(e.target.checked);
-
-                                          }}
-                                        />
-                                        <span className="label-text text-lg">4 - 5 วัน</span>
-                                      </label>
-                                      <label className="cursor-pointer flex items-center pb-2">
-                                        <input type="checkbox"
-                                          className="checkbox checkbox-sm mr-4"
-                                          value={isDeliveryTime4}
-                                          onChange={(e) => {
-                                            setIsDeliveryTime4(e.target.checked);
-
-                                          }}
-                                        />
-                                        <span className="label-text text-lg">6 - 7 วัน</span>
-                                      </label>
-                                      <label className="cursor-pointer flex items-center pb-2">
-                                        <input type="checkbox"
-                                          className="checkbox checkbox-sm mr-4"
-                                          value={isDeliveryTime5}
-                                          onChange={(e) => {
-                                            setIsDeliveryTime5(e.target.checked);
-
-                                          }}
-                                        />
-                                        <span className="label-text text-lg">8 - 14 วัน</span>
-                                      </label>
-                                      <label className="cursor-pointer flex items-center pb-2">
-                                        <input type="checkbox"
-                                          className="checkbox checkbox-sm mr-4"
-                                          value={isDeliveryTime6}
-                                          onChange={(e) => {
-                                            setIsDeliveryTime6(e.target.checked);
-
-                                          }}
-                                        />
-                                        <span className="label-text text-lg">15 วัน ขึ้นไป</span>
+                                        <span className="label-text text-lg">2 - 5 วัน</span>
                                       </label>
                                     </div>
                                   </Disclosure.Panel>
@@ -552,7 +493,7 @@ function HomrPage() {
                       </div>
                       <div className='col-span-3 '>
                         {
-                          dataDelivery ? dataDelivery?.map((element) => (
+                           Array.isArray(dataDelivery) ? dataDelivery.map((element) => (
                             // eslint-disable-next-line react/jsx-key
                             <div className="card bg-white border border-gray-200 w-full mb-4">
                               <div className="card-body">
@@ -560,7 +501,7 @@ function HomrPage() {
                                   <div className='grid grid-cols-1 md:grid-cols-6 gap-4'>
                                     <div className='col-span-1'>
                                       <div className='flex justify-center items-center'>
-                                        <img src={element.img_url} className=' w-[132px] h-[60px] max-w-full object-contain ' />
+                                        <img src={element?.img_url} className=' w-[132px] h-[60px] max-w-full object-contain ' />
                                       </div>
                                     </div>
                                     <div className='col-span-1 flex flex-col justify-center items-center '>
@@ -579,25 +520,26 @@ function HomrPage() {
                                         </div>
                                       </div>
                                       <h5 className='text-md text-black font-light'>{
-                                        element.delivery_time
+                                        element?.delivery_time
                                       }</h5>
                                     </div>
                                     <div className='col-span-1 flex flex-col justify-center items-center'>
                                       <h3 className='text-xl text-black font-medium'>จุดรับส่งพัสดุ</h3>
-                                      <h5 className='text-md text-black font-light'>{
-                                        element.parcel_pickup_point
-                                      }</h5>
+                                      <h5 className='text-md text-black font-light'>
+                                        {element.parcel_pickup_point}
+                                        {/* เข้ารับที่หน้าบ้าน */}
+                                      </h5>
                                     </div>
                                     <div className='col-span-1 flex flex-col justify-center items-center'>
                                       <h3 className='text-xl text-black font-medium'>ค่าบริการ</h3>
                                       <h5 className='text-md text-black font-light'>{
-                                        element.rate + ' บาท'
+                                        element?.rate + ' บาท'
                                       }</h5>
                                     </div>
                                     <div className='col-span-1 flex flex-col justify-center items-center'>
                                       <Button type="primary" className="font-kanit bg-primary hover:bg-secondary text-white font-normal focus:outline-none focus:shadow-outline"
                                         onClick={() => {
-                                          window.open('https://www.bsgroupth.com/', '_blank');
+                                          window.open('https://www.bsgroupth.com/register-for-bs-booking', '_blank');
                                         }}
                                       >
                                         ใช้บริการ

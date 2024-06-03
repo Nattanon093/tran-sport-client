@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import logo from '../assets/images/logo150x150.png'
 
 const navigation = [
-    { name: 'เข้าสู่เว็บไซต์', href: '#', current: false },
-    { name: 'เช็คสถานะพัสดุ', href: '/check-package', current: false },
+    { name: 'เข้าสู่เว็บไซต์', href: 'https://www.bsgroupth.com/', current: false },
+    { name: 'เช็คสถานะพัสดุ', href: 'http://bsxpress.co/Master/Trackno', current: false },
 ]
 
 
@@ -36,7 +36,36 @@ export default function Layout({ children }) {
                                         <div className="hidden md:block">
                                             <div className="ml-10 flex items-baseline space-x-4">
                                                 {navigation.map((item) => (
-                                                    <a
+                                                    item.name === 'เข้าสู่เว็บไซต์' ?
+                                                        <a
+                                                            key={item.name}
+                                                            href={item.href}
+                                                            target="_blank"
+                                                            className={classNames(
+                                                                item.current
+                                                                    ? 'bg-gray-900 text-white'
+                                                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                                                'rounded-md px-3 py-2 text-sm font-medium font-kanit'
+                                                            )}
+                                                            aria-current={item.current ? 'page' : undefined}
+                                                        >
+                                                            {item.name}
+                                                        </a> : item.name === 'เช็คสถานะพัสดุ' ?
+                                                        <a
+                                                            key={item.name}
+                                                            href={item.href}
+                                                            target="_blank"
+                                                            className={classNames(
+                                                                item.current
+                                                                    ? 'bg-gray-900 text-white'
+                                                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                                                'rounded-md px-3 py-2 text-sm font-medium font-kanit'
+                                                            )}
+                                                            aria-current={item.current ? 'page' : undefined}
+                                                        >
+                                                            {item.name}
+                                                        </a>
+                                                        : <a
                                                         key={item.name}
                                                         href={item.href}
                                                         className={classNames(
@@ -49,6 +78,19 @@ export default function Layout({ children }) {
                                                     >
                                                         {item.name}
                                                     </a>
+                                                    // <a
+                                                    //     key={item.name}
+                                                    //     href={item.href}
+                                                    //     className={classNames(
+                                                    //         item.current
+                                                    //             ? 'bg-gray-900 text-white'
+                                                    //             : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                                    //         'rounded-md px-3 py-2 text-sm font-medium font-kanit'
+                                                    //     )}
+                                                    //     aria-current={item.current ? 'page' : undefined}
+                                                    // >
+                                                    //     {item.name}
+                                                    // </a>
                                                 ))}
                                             </div>
                                         </div>
