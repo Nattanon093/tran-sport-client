@@ -11,6 +11,7 @@ import pay from '../assets/svg/pay.svg'
 import ship from '../assets/svg/ship.svg'
 import { useLocation } from 'react-router-dom';
 import { Modal } from 'antd';
+import  Service  from '../service/service';
 
 const { TextArea } = Input;
 
@@ -24,7 +25,11 @@ function CheckPackagePage() {
 
     const onSubmit = async (values) => {
         try {
-            setIsOpen(true);
+            const data = {
+                x: values.address_origin
+            }
+            const response = await Service.checkProvider(data);
+            console.log(response);
         } catch (error) {
             console.error(error);
         }
@@ -251,7 +256,7 @@ function CheckPackagePage() {
                                                         className='w-full'
                                                         rules={[{ required: true, message: 'กรุณาให้คะแนน' }]}
                                                     >
-                                                       <RatingComponent />
+                                                        <RatingComponent />
                                                     </Form.Item>
                                                 </div>
                                                 <div className='flex justify-center'>

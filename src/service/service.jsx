@@ -21,6 +21,7 @@ const getProvinceAndDistrictAndSubDistrict = async () => {
 const getDeliveryService = async (data) => {
     try {
         const response = await axios.post(`${import.meta.env.VITE_BASE_API_URL}/api/v1/getDeliveryService`, data);
+        // const response = await axios.post(`https://api.bsdeliverymarkets.com/api/v1/getDeliveryService`, data);
         return response.data;
     } catch (error) {
         console.error(error);
@@ -45,4 +46,14 @@ const getParcelBoxSize = async () => {
     }
 }
 
-export default { getPosts, getProvinceAndDistrictAndSubDistrict, getDeliveryService, fitlerDataDelivery, getParcelBoxSize };
+const checkProvider = async (data) => {
+    try {
+        // const response = await axios.post(`${import.meta.env.VITE_BASE_API_URL}/api/v1/Tracking_CheckProvider`, data);
+        const response = await axios.post(`http://bsxpress.co/Master/Tracking_CheckProvider?x=${data.x}`);
+        return response;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export default { getPosts, getProvinceAndDistrictAndSubDistrict, getDeliveryService, fitlerDataDelivery, getParcelBoxSize, checkProvider };
