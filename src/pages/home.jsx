@@ -244,18 +244,18 @@ function HomrPage() {
                     isParcelBoxSize && (
                       <div className="flex flex-col mb-0 col-span-2 md:col-span-2">
                         <Form.Item
-                          name="width"
+                          name="boxSizeId"
                           className='w-full'
                           rules={[{ required: true, message: 'กรุณากรอกความกว้าง' }]}
                         >
-                          <Select className="w-full p-2 xs:p-0 rounded-md h-14 xs:h-10 font-kanit"
-                            name="width"
+                          <Select className="w-full p-2 xs:p-0 rounded-md h-14 font-kanit"
+                            name="boxSizeId"
                             showSearch
                             placeholder="ค้นหาขนาดกล่องพัสดุ"
                           >
                             {parcelBoxSize?.map((parcel) => (
                               <Select.Option key={parcel.id} value={parcel.id}>
-                                {parcel.name}
+                                {parcel.size_name}
                               </Select.Option>
                             ))}
                           </Select>
