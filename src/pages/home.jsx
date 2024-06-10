@@ -248,7 +248,17 @@ function HomrPage() {
                           className='w-full'
                           rules={[{ required: true, message: 'กรุณากรอกความกว้าง' }]}
                         >
-                          <InputNumber type="text" className="w-full p-1 sm:p-0 border border-gray-300 rounded-md font-kanit" placeholder="กว้าง" />
+                          <Select className="w-full p-2 xs:p-0 rounded-md h-14 xs:h-10 font-kanit"
+                            name="width"
+                            showSearch
+                            placeholder="ค้นหาขนาดกล่องพัสดุ"
+                          >
+                            {parcelBoxSize?.map((parcel) => (
+                              <Select.Option key={parcel.id} value={parcel.id}>
+                                {parcel.name}
+                              </Select.Option>
+                            ))}
+                          </Select>
                         </Form.Item>
                         <Form.Item
                           name="isParcelBoxSize"
@@ -270,6 +280,7 @@ function HomrPage() {
                     !isParcelBoxSize && (
                       <>
                         <div className="flex flex-col mb-0 col-span-2 md:col-span-1">
+
                           <Form.Item
                             name="width"
                             className='w-full'
@@ -277,6 +288,7 @@ function HomrPage() {
                           >
                             <InputNumber type="text" className="w-full p-1 sm:p-0 border border-gray-300 rounded-md font-kanit" placeholder="กว้าง" />
                           </Form.Item>
+
                           <Form.Item
                             name="isParcelBoxSize"
                             className='w-full'
@@ -498,11 +510,11 @@ function HomrPage() {
                             Array.isArray(dataDelivery) ? dataDelivery.map((element, index) => (
                               // eslint-disable-next-line react/jsx-key
                               <div className="card bg-white border border-gray-200 w-full mb-4">
-                                 {index === 0 && (
-                                    <div className=' w-36 border rounded-tl-lg rounded-br-lg border-gray-200 bg-red-500'>
-                                      <h3 className='ml-1 text-xl text-white font-medium'>แนะนำสำหรับคุณ</h3>
-                                    </div>
-                                  )}
+                                {index === 0 && (
+                                  <div className=' w-36 border rounded-tl-lg rounded-br-lg border-gray-200 bg-red-500'>
+                                    <h3 className='ml-1 text-xl text-white font-medium'>แนะนำสำหรับคุณ</h3>
+                                  </div>
+                                )}
                                 <div className="card-body">
                                   <div className="overflow-x-auto">
                                     <div className='grid grid-cols-1 md:grid-cols-6 gap-4'>
