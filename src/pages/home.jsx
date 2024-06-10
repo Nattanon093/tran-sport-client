@@ -248,7 +248,7 @@ function HomrPage() {
                           className='w-full'
                           rules={[{ required: true, message: 'กรุณากรอกความกว้าง' }]}
                         >
-                          <Select className="w-full p-2 xs:p-0 rounded-md h-14 font-kanit"
+                          <Select className="w-full p-2 xs:p-0 rounded-md font-kanit"
                             name="boxSizeId"
                             showSearch
                             placeholder="ค้นหาขนาดกล่องพัสดุ"
