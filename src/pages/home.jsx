@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Disclosure } from '@headlessui/react'
 import { PlusIcon, MinusIcon } from '@heroicons/react/20/solid'
-import { Button, Select, Form, Checkbox } from 'antd';
+import { Button, Select, Form, Checkbox, Spin } from 'antd';
 import Layout from '../layout/layout'
 import { InputNumber } from 'antd';
 import Service from '../service/service';
@@ -12,6 +12,7 @@ import createOrder from '../assets/svg/create_order.svg'
 import pay from '../assets/svg/pay.svg'
 import ship from '../assets/svg/ship.svg'
 import { useLocation } from 'react-router-dom';
+import NotiAfterConfirm from '../Notification/NotiAfterConfirm';
 
 function HomrPage() {
 
@@ -34,6 +35,7 @@ function HomrPage() {
   const [isDeliveryTime5, setIsDeliveryTime5] = useState(false);
   const [isDeliveryTime6, setIsDeliveryTime6] = useState(false);
   const [isParcelBoxSize, setIsParcelBoxSize] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
 
 
@@ -56,7 +58,6 @@ function HomrPage() {
   }
 
   const onSubmit = async (values) => {
-    console.log('values.boxSizeId', values.boxSizeId);
     try {
       const from = {
         district: "",
@@ -99,8 +100,16 @@ function HomrPage() {
         parcel: parcel,
       });
       const response = await Service.getDeliveryService(data);
-      setDataDelivery(response);
-      setOriginalData(response);
+      if (response.status === 200) {
+        const sortedData = response.data.sort((a, b) => a.rate - b.rate);
+        setDataDelivery(sortedData);
+        setOriginalData(sortedData);
+        NotiAfterConfirm('success', 'สำเร็จ', 'ค้นหาข้อมูลสำเร็จ');
+        setIsLoading(false);
+      } else {
+        NotiAfterConfirm('error', 'เกิดข้อผิดพลาด', 'ค้นหาข้อมูลไม่สำเร็จ');
+        setIsLoading(false);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -181,19 +190,19 @@ function HomrPage() {
             }}
           >
             <div
-              className="relative w-full h-[70vh] bg-cover bg-center" style={{ backgroundImage: `url(${imageBackground})` }}
+              className="relative w-full h-[100vh] md:h-[70vh] lg:h-[90vh] bg-cover bg-center"
+              style={{ backgroundImage: `url(${imageBackground})` }}
             >
-              <div className='card bg-white w-[55%] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-10
-               rounded-xl shadow-lg xs:p-4 xs:top-1/2 xs:left-1/2 xs:transform xs--translate-x-1/2 xs--translate-y-1/2
-              '>
+              <div className='card bg-white w-full md:w-[55%] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 md:p-10
+               rounded-xl shadow-lg'>
                 <div className='flex items-center'>
                   <h3 className='text-2xl text-black font-light mb-4 mr-2'>ค้นหาและเปรียบเทียบขนส่งที่ดีที่สุด </h3>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 mb-4 text-[#d81d19]">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
                   </svg>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  <div className="flex p-4 xs:p-0 col-span-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  <div className="flex col-span-2">
                     <Form.Item
                       name="address_origin"
                       className='w-full'
@@ -212,7 +221,7 @@ function HomrPage() {
                       </Select>
                     </Form.Item>
                   </div>
-                  <div className="flex p-4 xs:p-0 col-span-2">
+                  <div className="flex col-span-2">
                     <Form.Item
                       name="address_destination"
                       className='w-full'
@@ -233,27 +242,42 @@ function HomrPage() {
                   </div>
                   {
                     isParcelBoxSize && (
-                      <div className="flex flex-col mb-0 p-4 xs:p-0 col-span-2 md:col-span-2">
+                      <div className="flex flex-col mb-0 col-span-2 md:col-span-2">
                         <Form.Item
-                          name="boxSizeId"
+                          name="width"
                           className='w-full'
                           rules={[{ required: true, message: 'กรุณากรอกความกว้าง' }]}
                         >
-                          <Select className="w-full p-2 xs:p-0 rounded-md font-kanit"
-                            name="boxSizeId"
-                            showSearch
-                            placeholder="เลือกขนาดกล่องพัสดุ"
-                            filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                          >
-                            {
-                              parcelBoxSize?.map((boxSize) => (
-                                <Select.Option key={boxSize.id} value={boxSize.id}>
-                                  {boxSize.size_name}
-                                </Select.Option>
-                              ))}
-                          </Select>
+                          <InputNumber type="text" className="w-full p-1 sm:p-0 border border-gray-300 rounded-md font-kanit" placeholder="กว้าง" />
                         </Form.Item>
                         <Form.Item
+                          name="isParcelBoxSize"
+                          className='w-full'
+                        >
+                          <Checkbox className="text-black font-kanit"
+                            onChange={(e) => {
+                              setIsParcelBoxSize(e.target.checked)
+                            }}
+                            checked={isParcelBoxSize}
+                          >
+                            ต้องการเลือกขนาดกล่องพัสดุ
+                          </Checkbox>
+                        </Form.Item>
+                      </div>
+                    )
+                  }
+                  {
+                    !isParcelBoxSize && (
+                      <>
+                        <div className="flex flex-col mb-0 col-span-2 md:col-span-1">
+                          <Form.Item
+                            name="width"
+                            className='w-full'
+                            rules={[{ required: true, message: 'กรุณากรอกความกว้าง' }]}
+                          >
+                            <InputNumber type="text" className="w-full p-1 sm:p-0 border border-gray-300 rounded-md font-kanit" placeholder="กว้าง" />
+                          </Form.Item>
+                          <Form.Item
                             name="isParcelBoxSize"
                             className='w-full'
                           >
@@ -261,61 +285,34 @@ function HomrPage() {
                               onChange={(e) => {
                                 setIsParcelBoxSize(e.target.checked)
                               }}
-                              checked
+                              checked={isParcelBoxSize}
                             >
                               ต้องการเลือกขนาดกล่องพัสดุ
                             </Checkbox>
                           </Form.Item>
-                      </div>
+                        </div>
+                        <div className="flex col-span-2 md:col-span-1">
+                          <Form.Item
+                            name="long"
+                            className='w-full'
+                            rules={[{ required: true, message: 'กรุณากรอกยาว' }]}
+                          >
+                            <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="ยาว" />
+                          </Form.Item>
+                        </div>
+                        <div className="flex col-span-2 md:col-span-1">
+                          <Form.Item
+                            name="height"
+                            className='w-full'
+                            rules={[{ required: true, message: 'กรุณากรอกสูง' }]}
+                          >
+                            <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="สูง" />
+                          </Form.Item>
+                        </div>
+                      </>
                     )
                   }
-                  {
-                      !isParcelBoxSize && (
-                        <>
-                          <div className="flex flex-col mb-0 p-4 xs:p-0 col-span-2 md:col-span-1">
-                            <Form.Item
-                              name="width"
-                              className='w-full'
-                              rules={[{ required: true, message: 'กรุณากรอกความกว้าง' }]}
-                            >
-                              <InputNumber type="text" className="w-full p-1 sm:p-0 border border-gray-300 rounded-md font-kanit" placeholder="กว้าง" />
-                            </Form.Item>
-                            <Form.Item
-                              name="isParcelBoxSize"
-                              className='w-full'
-                            >
-                              <Checkbox className="text-black font-kanit"
-                                onChange={(e) => {
-                                  setIsParcelBoxSize(e.target.checked)
-                                }}
-                                checked={isParcelBoxSize}
-                              >
-                                ต้องการเลือกขนาดกล่องพัสดุ
-                              </Checkbox>
-                            </Form.Item>
-                          </div>
-                          <div className="flex p-4 xs:p-0 col-span-2 md:col-span-1">
-                            <Form.Item
-                              name="long"
-                              className='w-full'
-                              rules={[{ required: true, message: 'กรุณากรอกยาว' }]}
-                            >
-                              <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="ยาว" />
-                            </Form.Item>
-                          </div>
-                          <div className="flex p-4 xs:p-0 col-span-2 md:col-span-1">
-                            <Form.Item
-                              name="height"
-                              className='w-full'
-                              rules={[{ required: true, message: 'กรุณากรอกสูง' }]}
-                            >
-                              <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="สูง" />
-                            </Form.Item>
-                          </div>
-                        </>
-                      )
-                    }
-                  <div className={isParcelBoxSize ? "flex p-4 xs:p-0 col-span-2 md:col-span-2" : "flex p-4 xs:p-0 col-span-2 md:col-span-1"}>
+                  <div className={isParcelBoxSize ? "flex 4 col-span-2 md:col-span-2" : "flex  col-span-2 md:col-span-1"}>
                     <Form.Item
                       name="weight"
                       className='w-full'
@@ -325,7 +322,7 @@ function HomrPage() {
                     </Form.Item>
                   </div>
                 </div>
-                <div className="flex justify-center mt-4 xs:mt-1">
+                <div className="flex justify-center mt-2 md:mt-4">
                   <Button type="primary" htmlType="submit" className="font-kanit bg-primary hover:!bg-[#e95e5f] text-white font-normal focus:outline-none focus:shadow-outline"
                   >
                     ตรวจสอบราคา
@@ -493,68 +490,79 @@ function HomrPage() {
                       </div>
                       <div className='col-span-3 '>
                         {
-                           Array.isArray(dataDelivery) ? dataDelivery.map((element) => (
-                            // eslint-disable-next-line react/jsx-key
-                            <div className="card bg-white border border-gray-200 w-full mb-4">
-                              <div className="card-body">
-                                <div className="overflow-x-auto">
-                                  <div className='grid grid-cols-1 md:grid-cols-6 gap-4'>
-                                    <div className='col-span-1'>
-                                      <div className='flex justify-center items-center'>
-                                        <img src={element?.img_url} className=' w-[132px] h-[60px] max-w-full object-contain ' />
-                                      </div>
+                          isLoading ? (
+                            <div className='flex justify-center items-center'>
+                              <Spin />
+                            </div>
+                          ) : (
+                            Array.isArray(dataDelivery) ? dataDelivery.map((element, index) => (
+                              // eslint-disable-next-line react/jsx-key
+                              <div className="card bg-white border border-gray-200 w-full mb-4">
+                                 {index === 0 && (
+                                    <div className=' w-36 border rounded-tl-lg rounded-br-lg border-gray-200 bg-red-500'>
+                                      <h3 className='ml-1 text-xl text-white font-medium'>แนะนำสำหรับคุณ</h3>
                                     </div>
-                                    <div className='col-span-1 flex flex-col justify-center items-center '>
-                                      <h3 className='text-xl text-black font-medium'>เงื่อนไขการขนส่ง</h3>
-                                      <h5 className='text-md text-black font-light'>ขั้นต่ำ 1 ชิ้น</h5>
-                                    </div>
-                                    <div className='col-span-1 flex flex-col justify-center items-center'>
-                                      <div className='flex items-center justify-center'>
-                                        <h3 className='text-xl text-black font-medium'>ระยะเวลาส่ง</h3>
-                                        <div className="tooltip" data-tip="ระยะเวลาจัดส่งขึ้นอยู่กับสถานที่จัดส่งและสถานที่ปลายทาง">
-                                          <div className='ml-2'>
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                                            </svg>
-                                          </div>
+                                  )}
+                                <div className="card-body">
+                                  <div className="overflow-x-auto">
+                                    <div className='grid grid-cols-1 md:grid-cols-6 gap-4'>
+                                      <div className='col-span-1'>
+                                        <div className='flex justify-center items-center'>
+                                          <img src={element?.img_url} className=' w-[132px] h-[60px] max-w-full object-contain ' />
                                         </div>
                                       </div>
-                                      <h5 className='text-md text-black font-light'>{
-                                        element?.delivery_time
-                                      }</h5>
-                                    </div>
-                                    <div className='col-span-1 flex flex-col justify-center items-center'>
-                                      <h3 className='text-xl text-black font-medium'>จุดรับส่งพัสดุ</h3>
-                                      <h5 className='text-md text-black font-light'>
-                                        {element.parcel_pickup_point}
-                                        {/* เข้ารับที่หน้าบ้าน */}
-                                      </h5>
-                                    </div>
-                                    <div className='col-span-1 flex flex-col justify-center items-center'>
-                                      <h3 className='text-xl text-black font-medium'>ค่าบริการ</h3>
-                                      <h5 className='text-md text-black font-light'>{
-                                        element?.rate + ' บาท'
-                                      }</h5>
-                                    </div>
-                                    <div className='col-span-1 flex flex-col justify-center items-center'>
-                                      <Button type="primary" className="font-kanit bg-primary hover:bg-secondary text-white font-normal focus:outline-none focus:shadow-outline"
-                                        onClick={() => {
-                                          window.open('https://www.bsgroupth.com/register-for-bs-booking', '_blank');
-                                        }}
-                                      >
-                                        ใช้บริการ
-                                      </Button>
+                                      <div className='col-span-1 flex flex-col justify-center items-center '>
+                                        <h3 className='text-xl text-black font-medium'>เงื่อนไขการขนส่ง</h3>
+                                        <h5 className='text-md text-black font-light'>ขั้นต่ำ 1 ชิ้น</h5>
+                                      </div>
+                                      <div className='col-span-1 flex flex-col justify-center items-center'>
+                                        <div className='flex items-center justify-center'>
+                                          <h3 className='text-xl text-black font-medium'>ระยะเวลาส่ง</h3>
+                                          <div className="tooltip" data-tip="ระยะเวลาจัดส่งขึ้นอยู่กับสถานที่จัดส่งและสถานที่ปลายทาง">
+                                            <div className='ml-2'>
+                                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                                              </svg>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <h5 className='text-md text-black font-light'>{
+                                          element?.delivery_time
+                                        }</h5>
+                                      </div>
+                                      <div className='col-span-1 flex flex-col justify-center items-center'>
+                                        <h3 className='text-xl text-black font-medium'>จุดรับส่งพัสดุ</h3>
+                                        <h5 className='text-md text-black font-light'>
+                                          {element.parcel_pickup_point}
+                                          {/* เข้ารับที่หน้าบ้าน */}
+                                        </h5>
+                                      </div>
+                                      <div className='col-span-1 flex flex-col justify-center items-center'>
+                                        <h3 className='text-xl text-black font-medium'>ค่าบริการ</h3>
+                                        <h5 className='text-md text-black font-light'>{
+                                          element?.rate + ' บาท'
+                                        }</h5>
+                                      </div>
+                                      <div className='col-span-1 flex flex-col justify-center items-center'>
+                                        <Button type="primary" className="font-kanit bg-primary hover:bg-secondary text-white font-normal focus:outline-none focus:shadow-outline"
+                                          onClick={() => {
+                                            window.open('https://www.bsgroupth.com/register-for-bs-booking', '_blank');
+                                          }}
+                                        >
+                                          ใช้บริการ
+                                        </Button>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          ))
-                            : (
-                              <div className='flex justify-center items-center'>
-                                <h1 className='text-2xl text-black font-medium'>ไม่พบข้อมูล</h1>
-                              </div>
-                            )
+                            ))
+                              : (
+                                <div className='flex justify-center items-center'>
+                                  <h1 className='text-2xl text-black font-medium'>ไม่พบข้อมูล</h1>
+                                </div>
+                              )
+                          )
                         }
                       </div>
                     </div>

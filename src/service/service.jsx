@@ -22,7 +22,7 @@ const getDeliveryService = async (data) => {
     try {
         const response = await axios.post(`${import.meta.env.VITE_BASE_API_URL}/api/v1/getDeliveryService`, data);
         // const response = await axios.post(`https://api.bsdeliverymarkets.com/api/v1/getDeliveryService`, data);
-        return response.data;
+        return response;
     } catch (error) {
         console.error(error);
     }
