@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Disclosure } from '@headlessui/react'
 import { PlusIcon, MinusIcon } from '@heroicons/react/20/solid'
-import { Button, Select, Form, Checkbox, Spin } from 'antd';
+import { Button, Select, Form, Checkbox, Spin, Tooltip } from 'antd';
 import Layout from '../layout/layout'
 import { InputNumber } from 'antd';
 import Service from '../service/service';
@@ -262,7 +262,7 @@ function HomrPage() {
                         </Form.Item>
                         <Form.Item
                           name="isParcelBoxSize"
-                          className='w-full'
+                          className='w-full hidden md:block'
                         >
                           <Checkbox className="text-black font-kanit"
                             onChange={(e) => {
@@ -291,7 +291,7 @@ function HomrPage() {
 
                           <Form.Item
                             name="isParcelBoxSize"
-                            className='w-full'
+                            className='w-full hidden md:block'
                           >
                             <Checkbox className="text-black font-kanit"
                               onChange={(e) => {
@@ -307,7 +307,7 @@ function HomrPage() {
                           <Form.Item
                             name="long"
                             className='w-full'
-                            rules={[{ required: true, message: 'กรุณากรอกยาว' }]}
+                            rules={[{ required: true, message: 'กรุณากรอกความยาว' }]}
                           >
                             <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="ยาว" />
                           </Form.Item>
@@ -316,7 +316,7 @@ function HomrPage() {
                           <Form.Item
                             name="height"
                             className='w-full'
-                            rules={[{ required: true, message: 'กรุณากรอกสูง' }]}
+                            rules={[{ required: true, message: 'กรุณากรอกความสูง' }]}
                           >
                             <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="สูง" />
                           </Form.Item>
@@ -324,13 +324,36 @@ function HomrPage() {
                       </>
                     )
                   }
-                  <div className={isParcelBoxSize ? "flex 4 col-span-2 md:col-span-2" : "flex  col-span-2 md:col-span-1"}>
+                  <div className={isParcelBoxSize ? "flex 4 col-span-2 md:col-span-2 hidden md:block" : "flex  col-span-2 md:col-span-1 hidden md:block"}>
                     <Form.Item
                       name="weight"
-                      className='w-full'
+                      className='w-full '
                       rules={[{ required: true, message: 'กรุณากรอกน้ำหนัก' }]}
                     >
                       <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="น้ำหนัก(กิโลกรัม)" />
+                    </Form.Item>
+                  </div>
+                  <div className="flex flex-col mb-0 col-span-2 md:col-span-1 md:hidden">
+                    <Form.Item
+                      name="weight"
+                      className='w-full '
+                      rules={[{ required: true, message: 'กรุณากรอกน้ำหนัก' }]}
+                    >
+                      <InputNumber type="text" className="w-full p-1 xs:p-0 border border-gray-300 rounded-md font-kanit" placeholder="น้ำหนัก(กิโลกรัม)" />
+                    </Form.Item>
+
+                    <Form.Item
+                      name="isParcelBoxSize"
+                      className='w-full'
+                    >
+                      <Checkbox className="text-black font-kanit"
+                        onChange={(e) => {
+                          setIsParcelBoxSize(e.target.checked)
+                        }}
+                        checked={isParcelBoxSize}
+                      >
+                        ต้องการเลือกขนาดกล่องพัสดุ
+                      </Checkbox>
                     </Form.Item>
                   </div>
                 </div>
@@ -530,13 +553,13 @@ function HomrPage() {
                                       <div className='col-span-1 flex flex-col justify-center items-center'>
                                         <div className='flex items-center justify-center'>
                                           <h3 className='text-xl text-black font-medium'>ระยะเวลาส่ง</h3>
-                                          <div className="tooltip" data-tip="ระยะเวลาจัดส่งขึ้นอยู่กับสถานที่จัดส่งและสถานที่ปลายทาง">
+                                          <Tooltip className=' font-kanit ' title="ระยะเวลาจัดส่งขึ้นอยู่กับสถานที่จัดส่งและสถานที่ปลายทาง">
                                             <div className='ml-2'>
                                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                                               </svg>
                                             </div>
-                                          </div>
+                                          </Tooltip>
                                         </div>
                                         <h5 className='text-md text-black font-light'>{
                                           element?.delivery_time
@@ -551,7 +574,7 @@ function HomrPage() {
                                       </div>
                                       <div className='col-span-1 flex flex-col justify-center items-center'>
                                         <h3 className='text-xl text-black font-medium'>ค่าบริการ</h3>
-                                        <h5 className='text-md text-black font-light'>{
+                                        <h5 className='text-xl text-black font-light'>{
                                           element?.rate + ' บาท'
                                         }</h5>
                                       </div>
