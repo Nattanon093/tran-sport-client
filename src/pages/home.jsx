@@ -101,7 +101,13 @@ function HomrPage() {
       });
       const response = await Service.getDeliveryService(data);
       if (response.status === 200) {
-        const sortedData = response.data.sort((a, b) => a.rate - b.rate);
+        let DeliveryData = [];
+        response?.data?.map((element) => {
+          element.map((item) => {
+            DeliveryData.push(item);
+          });
+        });
+        const sortedData = DeliveryData?.sort((a, b) => a.rate - b.rate);
         setDataDelivery(sortedData);
         setOriginalData(sortedData);
         NotiAfterConfirm('success', 'สำเร็จ', 'ค้นหาข้อมูลสำเร็จ');
@@ -573,8 +579,8 @@ function HomrPage() {
                                         </h5>
                                       </div>
                                       <div className='col-span-1 flex flex-col justify-center items-center'>
-                                        <h3 className='text-xl text-black font-medium'>ค่าบริการ</h3>
-                                        <h5 className='text-xl text-black font-light'>{
+                                        <h3 className='text-xl text-red-500 font-medium'>ค่าบริการ</h3>
+                                        <h5 className='text-xl text-red-500 font-light'>{
                                           element?.rate + ' บาท'
                                         }</h5>
                                       </div>

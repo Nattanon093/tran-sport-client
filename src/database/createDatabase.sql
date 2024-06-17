@@ -123,6 +123,20 @@ CREATE TABLE transportation_rate (
     is_active BOOLEAN DEFAULT TRUE
 );
 
+CREATE TABLE parcel_box (
+    id SERIAL PRIMARY KEY,
+    type_transportation_id INT REFERENCES transportation_type(id),
+    size_from DECIMAL(10, 2),
+    size_to DECIMAL(10, 2),
+    weight_from DECIMAL(10, 2),
+    weight_to DECIMAL(10, 2)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(255) NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE
+)
+
 CREATE TABLE transportation_rate_package_size (
     id SERIAL PRIMARY KEY,
     transportation_rate_id INT REFERENCES transportation_rate(id),
